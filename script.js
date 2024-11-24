@@ -52,7 +52,6 @@ function createHtmlContent(tasks) {
 
     noteDiv.appendChild(taskContentDiv);
     noteDiv.appendChild(iconDiv);
-    // noteDiv.appendChild(deleteIcon); 
     tasksUl.appendChild(noteDiv);
     
   });
