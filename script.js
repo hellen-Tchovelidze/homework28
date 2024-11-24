@@ -2,23 +2,32 @@ let form = document.getElementById("form");
 let taskInput = document.getElementById("taskInput");
 let tasksUl = document.getElementById("tasksUl");
 
-let today = new Date();
-let data = new Date()
+let currentDate = document.getElementById("currentDate");
 
-let dateString = today.toLocaleTimeString(); 
-let dateControl = data.getDay()
-document.getElementById("currentDate").textContent = dateString;
-document.getElementById("data").textContent = dateControl
+let days = document.getElementById("days");
 
-let todos = JSON.parse(localStorage.getItem("todos"));
+function updateTime() {
+  let now = new Date();
+  let day = now.getDate();
+  let hour = now.getHours();
+  let minute = now.getMinutes();
+  let weekday = new Date().toDateString();
+
+  days.textContent = weekday;
+  currentDate.textContent = ` ${hour} : ${minute}`;
+}
+
+setInterval(updateTime, 1000);
+
+let todos = JSON.parse(localStorage.getItem("todos")) || [];
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  let currentTime = new Date().toLocaleTimeString(); 
+  let currentTime = new Date().toLocaleTimeString();
   let newTask = {
-    ...{ id: todos.length + 1, task: taskInput.value, time: currentTime }
+    ...{ id: todos.length + 1, task: taskInput.value, time: currentTime },
   };
-   todos.push(newTask); 
+  todos.push(newTask);
 
   localStorage.setItem("todos", JSON.stringify(todos));
   createHtmlContent(todos);
@@ -26,39 +35,37 @@ form.addEventListener("submit", (e) => {
 });
 
 function createHtmlContent(tasks) {
-  tasksUl.innerHTML = ""; 
+  tasksUl.innerHTML = "";
   tasks.forEach((task) => {
     let noteDiv = document.createElement("div");
     noteDiv.classList.add("Note_hit");
     let taskContentDiv = document.createElement("div");
     let taskTitle = document.createElement("h1");
-    taskTitle.textContent = task.task; 
-    taskTitle.classList.add("taskTitle")
+    taskTitle.textContent = task.task;
+    taskTitle.classList.add("taskTitle");
     let taskTime = document.createElement("p");
-    taskTime.textContent = `Today at ${task.time}`; 
-    taskTime.classList.add("taskTime")
+    taskTime.textContent = `Today at ${task.time}`;
+    taskTime.classList.add("taskTime");
     taskContentDiv.appendChild(taskTitle);
     taskContentDiv.appendChild(taskTime);
     let iconDiv = document.createElement("div");
     let circleIcon = document.createElement("img");
-    circleIcon.src = "./images/akar-icons_circle.png"; 
+    circleIcon.src = "./images/akar-icons_circle.png";
     iconDiv.appendChild(circleIcon);
     let deleteIcon = document.createElement("img");
-    deleteIcon.src = "./images/Vector.png"; 
-    iconDiv.appendChild(deleteIcon)
+    deleteIcon.src = "./images/Vector.png";
+    iconDiv.appendChild(deleteIcon);
     deleteIcon.addEventListener("click", () => {
-      deleteTask(task.id); 
+      deleteTask(task.id);
     });
 
     noteDiv.appendChild(taskContentDiv);
     noteDiv.appendChild(iconDiv);
     tasksUl.appendChild(noteDiv);
-    
   });
 }
 
 function deleteTask(taskId) {
-
   todos = todos.filter((task) => task.id !== taskId);
   localStorage.setItem("todos", JSON.stringify(todos));
 
@@ -67,4 +74,3 @@ function deleteTask(taskId) {
 if (todos.length > 0) {
   createHtmlContent(todos);
 }
-
