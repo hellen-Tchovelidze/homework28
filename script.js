@@ -49,12 +49,12 @@ function createHtmlContent(tasks) {
     taskContentDiv.appendChild(taskTitle);
     taskContentDiv.appendChild(taskTime);
     let iconDiv = document.createElement("div");
-    let circleIcon = document.createElement("img");
-    circleIcon.src = "./images/akar-icons_circle.png";
-    iconDiv.appendChild(circleIcon);
     let deleteIcon = document.createElement("img");
     deleteIcon.src = "./images/Vector.png";
     iconDiv.appendChild(deleteIcon);
+    let checkbox = document.createElement("input");
+  checkbox.setAttribute("type", "checkbox");
+  iconDiv.appendChild(checkbox);
     deleteIcon.addEventListener("click", () => {
       deleteTask(task.id);
     });
