@@ -25,7 +25,7 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
   let currentTime = new Date().toLocaleTimeString();
   let newTask = {
-    ...{ id: todos.length + 1, task: taskInput.value, time: currentTime },
+    ...{ id: todos.length + 1, task: taskInput.value.trim(), time: currentTime, completed: false },
   };
   todos.push(newTask);
 
@@ -49,12 +49,30 @@ function createHtmlContent(tasks) {
     taskContentDiv.appendChild(taskTitle);
     taskContentDiv.appendChild(taskTime);
     let iconDiv = document.createElement("div");
+    iconDiv.classList.add("iconediv")
     let deleteIcon = document.createElement("img");
     deleteIcon.src = "./images/Vector.png";
     iconDiv.appendChild(deleteIcon);
     let checkbox = document.createElement("input");
   checkbox.setAttribute("type", "checkbox");
+  checkbox.classList.add("check_input")
   iconDiv.appendChild(checkbox);
+  checkbox.checked = task.completed; 
+if (task.completed) {
+  taskTitle.classList.add("completed"); 
+}
+checkbox.addEventListener("change", () => {
+  task.completed = checkbox.checked; 
+  localStorage.setItem("todos", JSON.stringify(todos)); 
+
+  if (checkbox.checked) {
+    taskTitle.classList.add("completed"); 
+  } else {
+    taskTitle.classList.remove("completed"); 
+  }
+});
+
+  
     deleteIcon.addEventListener("click", () => {
       deleteTask(task.id);
     });
@@ -65,6 +83,7 @@ function createHtmlContent(tasks) {
   });
 }
 
+
 function deleteTask(taskId) {
   todos = todos.filter((task) => task.id !== taskId);
   localStorage.setItem("todos", JSON.stringify(todos));
@@ -74,3 +93,4 @@ function deleteTask(taskId) {
 if (todos.length > 0) {
   createHtmlContent(todos);
 }
+
